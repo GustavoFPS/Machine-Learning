@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import sys
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler, StandardScaler
+
 
 dados = pd.read_csv("C:/Users/Gustavo/Documents/MeusProjetos/Machine-Learning/Atividade1/Stars.csv")
 colunas = dados.columns
@@ -37,12 +38,32 @@ def histograma(dado, title, bin = 50):
     plt.title(title)
     plt.xlabel(title)
     plt.ylabel('Frequência')
+    mean = np.mean(dado)
+    q3 = np.percentile(dado, 75)
+    q1 = np.percentile(dado, 25)
+    IIQ =  q3 - q1 
+    plt.axvline(x=mean, color="red", linestyle="--", label = "Média")
+    plt.axvline(x=q3 + 1.5*IIQ, color="g", linestyle="--", label = "Máximo")
+    plt.axvline(x=q1 - 1.5*IIQ, color="g", linestyle="--", label = "Mínimo")
+    plt.axvline(x= np.percentile(dado, 50), color="black", linestyle="--", label = "Mediana")
+    plt.legend()
     plt.show()
 
-#histograma(dados["Temperature"], "Temperatura") #não é normal
-#histograma(dados["L"], "L") #não é normal
-#histograma(dados["R"], "R") #não é normal
+
+histograma(dados["Temperature"], "Temperatura") #não é normal
+histograma(dados["L"], "L") #não é normal
+histograma(dados["R"], "R") #não é normal
 histograma(dados["A_M"], "A_M") #é normal
+
+scaler1 = MinMaxScaler()
+scaler2 = StandardScaler()
+
+dados['Temperature'] = scaler.fit_transform(dados[['Temperature']])
+dados["L"] = scaler.fit_transform(dados[["L"]])
+dados["R"] = scaler.fit_transform(dados[["R"]])
+
+dados["A_M"] = scaler.fit_transform(dados[["A_M"]])
+
 
 '''
 #teste se há dados inconsistentes 
